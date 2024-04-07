@@ -1,4 +1,12 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/pkg-info.mk
+
+export DEB_VERSION_UPSTREAM
+
 %:
-	dh $@
+	dh $@ --buildsystem=gradle --with maven-repo-helper
+
+override_dh_auto_build:
+	mkdir -p src/main/java
+	dh_auto_build

@@ -1,0 +1,5 @@
+# Override lintian warnings for jar files used in test cases
+testng7: source-contains-prebuilt-java-object [testng-core/src/test/resources/serviceloader.jar]
+testng7: source-contains-prebuilt-java-object [testng-core/src/test/resources/with-different-name-testng-xml.jar]
+testng7: source-contains-prebuilt-java-object [testng-core/src/test/resources/withouttestngxml.jar]
+testng7: source-contains-prebuilt-java-object [testng-core/src/test/resources/withtestngxml.jar]

@@ -1,0 +1,128 @@
+Description: Provide a Groovy gradle build for testng
+Author: Vladimir Petko <vladimir.petko@canonical.com> 
+Forwarded: not-needed
+
+--- /dev/null
++++ b/build.gradle
+@@ -0,0 +1,117 @@
++plugins {
++    id 'java-library'
++    id 'maven-publish'
++}
++
++repositories {
++    mavenLocal()
++}
++
++apply plugin: 'java'
++apply plugin: 'java-library'
++apply plugin: 'maven-publish'
++
++sourceCompatibility = 8
++targetCompatibility = 8
++
++dependencies {
++    compile 'org.slf4j:slf4j-api:1.7.36'
++    compile 'com.beust:jcommander:1.82'
++    compile 'org.apache.ant:ant:1.10.12'
++    compile 'com.google.inject:guice:5.1.0'
++    compile 'junit:junit:4.13.2'
++    compile 'org.yaml:snakeyaml:1.33'
++    compile 'org.assertj:assertj-core:2.3.0'
++}
++
++group = 'org.testng'
++version = System.env.DEB_VERSION_UPSTREAM
++description = 'testng'
++
++sourceSets {
++    main {
++        java {
++            srcDirs 'testng-runner-api/src/main/java'
++            srcDirs 'testng-core/src/main/java'
++            srcDirs 'testng-asserts/src/main/java'
++            srcDirs 'testng-core-api/src/main/java'
++            srcDirs 'testng-test-kit/src/main/java'
++            srcDirs 'testng-reflection-utils/src/main/java'
++            srcDirs 'testng-collections/src/main/java'
++        }
++        resources {
++            srcDirs 'testng-core/src/main/resources'
++        }
++    }
++}
++
++tasks {
++    jar {
++        manifest {
++        attributes(
++            "Specification-Title": rootProject.name,
++            "Specification-Version": version,
++            "Specification-Vendor" : rootProject.name,
++            "Implementation-Title" : rootProject.name,
++            "Implementation-Version": version,
++            "Implementation-Vendor" : rootProject.name,
++            "Implementation-Vendor-Id" : project.group,
++            "Implementation-Url":  "https://testng.org",
++            "Automatic-Module-Name" :  project.group,
++            "Bundle-ManifestVersion": "2",
++            "Bundle-Name": rootProject.name,
++            "Bundle-SymbolicName":  project.group,
++            "Bundle-Vendor": rootProject.name,
++            "Bundle-License": "Apache-2.0",
++            "Bundle-Description": "Testing framework for Java",
++            "Bundle-Version": version,
++            "Import-Package" : """
++                bsh.*;version="[2.0.03.0.0)";resolution:=optional,
++                com.beust.jcommander.*;version="[1.7.03.0.0)";resolution:=optional,
++                com.google.inject.*;version="[1.21.3)";resolution:=optional,
++                junit.framework;version="[3.8.1 5.0.0)";resolution:=optional,
++                org.junit.*;resolution:=optional,
++                org.apache.tools.ant.*;version="[1.7.0 2.0.0)";resolution:=optional,
++                org.yaml.*;version="[1.62.0)";resolution:=optional,
++                *;resolution:=optional
++            """.replace(" ", "").replace("\n", ""),
++            "Export-Package" : """
++                org.testng,
++                org.testng.annotations,
++                org.testng.asserts,
++                org.testng.collections,
++                org.testng.internal,
++                org.testng.internal.annotations,
++                org.testng.internal.ant,
++                org.testng.internal.collections,
++                org.testng.internal.invokers,
++                org.testng.internal.invokers.objects,
++                org.testng.internal.junit,
++                org.testng.internal.objects,
++                org.testng.internal.objects.pojo,
++                org.testng.internal.reflect,
++                org.testng.internal.thread,
++                org.testng.internal.thread.graph,
++                org.testng.junit,
++                org.testng.log,
++                org.testng.log4testng,
++                org.testng.reporters,
++                org.testng.reporters.jq,
++                org.testng.reporters.util,
++                org.testng.thread,
++                org.testng.util,
++                org.testng.xml,
++                org.testng.xml.internal
++            """.replace(" ", "").replace("\n", " ")
++        )
++        }
++    }
++}
++
++publishing {
++    publications {
++        testng(MavenPublication) {
++            from(components.java)
++        }
++    }
++}
+--- /dev/null
++++ b/settings.gradle
+@@ -0,0 +1 @@
++rootProject.name = 'testng'
